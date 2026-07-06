@@ -1,0 +1,12 @@
+# Local dev / tooling
+.claude/
+.DS_Store
+node_modules/
+
+# Design handoff + backups (not part of the deployed site)
+Dashboard redesign request.zip
+_pre_redesign_backup/
+
+# Redundant packaged copies (the repo root IS the deploy source)
+sandy-beauty-demo/
+sandy-beauty-demo.zip
