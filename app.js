@@ -475,9 +475,25 @@ const App = (function () {
     if (v && i < 3) { const n = $("pin" + (i + 1)); if (n) n.focus(); }
     if (ui.login.pin.replace(/\s/g,"").length === 4) setTimeout(tryLogin, 120);
   }
+  // private ntfy.sh topic Akeel subscribes to for demo sign-in alerts
+  const LOGIN_ALERT_TOPIC = "sb-demo-login-akl-7q2m9x4p3z";
+  function notifyLogin(staff) {
+    try {
+      const role = staff.role === "owner" ? "Owner" : "Aesthetician";
+      const when = new Date().toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+      fetch("https://ntfy.sh/" + LOGIN_ALERT_TOPIC, {
+        method: "POST",
+        body: staff.name + " (" + role + ") signed into the Sandy Beauty demo · " + when,
+        headers: { "Title": "Sandy Beauty demo login", "Tags": "sparkles" },
+        keepalive: true,
+      }).catch(function () {});
+    } catch (e) { /* never let an alert break login */ }
+  }
+
   function tryLogin() {
     const s = SB.login(ui.login.staffId, ui.login.pin);
     if (s) {
+      notifyLogin(s);
       ui.view = "dash";
       ui.ownerTab = "overview"; ui.staffTab = "day";
       toast("Welcome back, " + H(s.name.split(" ")[0]), "info");
